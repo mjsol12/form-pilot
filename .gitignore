@@ -1,0 +1,11 @@
+node_modules/
+playwright-report/
+test-results/
+.env
+.DS_Store
+*.log
+
+# Personal/local-only data. Keep the sample profile structure, but avoid
+# accidentally committing exported resumes or alternate private profiles.
+profiles/
+resumes/

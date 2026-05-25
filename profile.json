@@ -1,0 +1,38 @@
+{
+  "personal": {
+    "firstName": "Ada",
+    "lastName": "Lovelace",
+    "fullName": "Ada Lovelace",
+    "email": "ada@example.com",
+    "phone": "+1 555 010 1234",
+    "address": "123 Analytical Engine Way",
+    "city": "London",
+    "state": "CA",
+    "zip": "94105",
+    "country": "United States"
+  },
+  "work": {
+    "currentCompany": "Example Labs",
+    "currentTitle": "Software Engineer",
+    "linkedin": "https://www.linkedin.com/in/ada-lovelace",
+    "github": "https://github.com/ada",
+    "portfolio": "https://ada.example.com",
+    "yearsExperience": "5",
+    "desiredSalary": "150000"
+  },
+  "application": {
+    "authorizedToWork": true,
+    "requiresSponsorship": false,
+    "availableStartDate": "2026-06-15",
+    "willingToRelocate": false,
+    "remotePreference": "Remote",
+    "coverLetter": "I am excited about this role and would welcome the opportunity to discuss how my background fits your team."
+  },
+  "uploads": {
+    "resume": "./resumes/resume.pdf"
+  },
+  "custom": {
+    "pronouns": "she/her",
+    "website": "https://ada.example.com"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "form-pilot",
+  "version": "0.1.0",
+  "description": "Local-first AI-ready autofill helper for personal application workflows.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "form-pilot": "./apply.js"
+  },
+  "scripts": {
+    "start": "node apply.js",
+    "apply": "node apply.js",
+    "check": "node --check apply.js && node --check src/app.js && node --check src/autofillEngine.js && node --check src/browser.js && node --check src/fieldDetector.js && node --check src/fieldMatcher.js && node --check adapters/defaultAdapter.js && node --check adapters/index.js && node --check utils/logger.js && node --check utils/profile.js"
+  },
+  "keywords": [
+    "autofill",
+    "playwright",
+    "local-first",
+    "forms"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}
