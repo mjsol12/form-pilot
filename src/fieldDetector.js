@@ -1,5 +1,5 @@
 export const FIELD_SELECTOR = [
-  'input:not([type="hidden"]):not([disabled])',
+  'input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([disabled])',
   'textarea:not([disabled])',
   'select:not([disabled])'
 ].join(', ');

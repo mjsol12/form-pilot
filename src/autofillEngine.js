@@ -68,6 +68,11 @@ async function fillField(page, field, match, { logger }) {
 
   if (field.tagName === 'select') {
     const selected = await selectBestOption(locator, field.options, value);
+
+    if (!selected) {
+      return { field, match, status: 'skipped', reason: 'select_option_did_not_match' };
+    }
+
     await highlight(locator);
 
     return { field, match, status: 'filled', value: selected };
@@ -80,22 +85,31 @@ async function fillField(page, field, match, { logger }) {
 }
 
 async function selectBestOption(locator, options, value) {
-  const desired = normalizeText(value);
   const candidates = options.filter((option) => option.value || option.label);
+  const desiredValues = selectDesiredValues(value);
 
   const exact = candidates.find((option) => {
-    return normalizeText(option.value) === desired || normalizeText(option.label) === desired;
+    const optionValue = normalizeText(option.value);
+    const optionLabel = normalizeText(option.label);
+
+    return desiredValues.some((desired) => optionValue === desired || optionLabel === desired);
   });
 
   const partial = exact || candidates.find((option) => {
-    return normalizeText(option.value).includes(desired) || normalizeText(option.label).includes(desired);
+    const optionValue = normalizeText(option.value);
+    const optionLabel = normalizeText(option.label);
+
+    return desiredValues.some((desired) => {
+      return desired.length > 1 && (optionValue.includes(desired) || optionLabel.includes(desired));
+    });
   });
 
-  const fallback = partial || candidates.find((option) => option.value);
-  const selectedValue = fallback?.value ?? String(value);
+  if (!partial) {
+    return null;
+  }
 
-  await locator.selectOption(selectedValue);
-  return selectedValue;
+  await locator.selectOption(partial.value);
+  return partial.value;
 }
 
 async function highlight(locator) {
@@ -108,18 +122,31 @@ async function highlight(locator) {
 
 function shouldSelectRadio(field, value) {
   const desired = normalizeText(value);
-  const fieldText = normalizeText([
+  const optionText = normalizeText([
     field.value,
     field.label,
     field.ariaLabel,
-    field.nearbyText
+    field.name,
+    field.id
   ].filter(Boolean).join(' '));
+  const fallbackText = optionText || normalizeText(field.nearbyText);
 
   if (typeof value === 'boolean') {
-    return value === true && !/\b(no|false|decline)\b/.test(fieldText);
+    const positive = /\b(yes|true|y|1|accept|agree)\b/.test(fallbackText);
+    const negative = /\b(no|false|n|0|decline|disagree|do not|don't|not)\b/.test(fallbackText);
+
+    return value ? positive || !negative : negative;
   }
 
-  return fieldText.includes(desired);
+  return fallbackText.includes(desired) || normalizeText(field.nearbyText).includes(desired);
+}
+
+function selectDesiredValues(value) {
+  if (typeof value === 'boolean') {
+    return value ? ['true', 'yes', 'y', '1', 'on'] : ['false', 'no', 'n', '0', 'off'];
+  }
+
+  return [normalizeText(value)].filter(Boolean);
 }
 
 function normalizeValue(value) {
